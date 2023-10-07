@@ -1,5 +1,11 @@
 import express from "express";
 import cors from "cors";
+import mongoose from "mongoose";
+
+const CONNECTION_STRING =
+  process.env.DB_CONNECTION_STRING || "mongodb://localhost:27017/piflix";
+console.log("CONNECTION_STRING ", CONNECTION_STRING);
+mongoose.connect(CONNECTION_STRING);
 
 const corsOptions = {
   origin: "*",
