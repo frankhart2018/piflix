@@ -12,3 +12,7 @@ export const checkVideoExistanceByName = (name) => {
     name,
   });
 };
+
+export const listVideos = () => {
+  return videoModel.find();
+};

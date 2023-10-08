@@ -44,12 +44,18 @@ const registerVideoHandler = async (req, res) => {
   }
 };
 
+const listVideos = async (req, res) => {
+  return res.status(200).json(await videoDao.listVideos());
+};
+
 const VideoController = (app) => {
   app.post(
     "/register-video",
     upload.single("video-file"),
     registerVideoHandler
   );
+
+  app.get("/list-videos", listVideos);
 };
 
 export default VideoController;
