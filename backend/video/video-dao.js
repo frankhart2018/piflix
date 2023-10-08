@@ -16,3 +16,9 @@ export const checkVideoExistanceByName = (name) => {
 export const listVideos = () => {
   return videoModel.find();
 };
+
+export const findVideoById = (video_id) => {
+  return videoModel.findOne({
+    _id: video_id,
+  });
+};
