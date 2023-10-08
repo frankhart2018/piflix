@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useDispatch } from "react-redux";
 
-import { registerVideoThunk } from "../../services/register-video-thunk";
+import { registerVideoThunk } from "../../services/video-thunk";
 
 const RegisterVideo = () => {
   const [videoName, setVideoName] = useState("");

@@ -6,11 +6,12 @@ import ListVideo from "./components/list-video/ListVideo";
 import "./App.css";
 import { configureStore } from "@reduxjs/toolkit";
 import { Provider } from "react-redux";
-import registerVideoReducer from "./reducers/register-video-reducer";
+import videoReducer from "./reducers/video-reducer";
+import ShowVideo from "./components/show-video/ShowVideo";
 
 const store = configureStore({
   reducer: {
-    register: registerVideoReducer,
+    video: videoReducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
@@ -27,6 +28,7 @@ function App() {
         <Routes>
           <Route path="/" element={<ListVideo />} />
           <Route path="/register" element={<RegisterVideo />} />
+          <Route path="/video/:id" element={<ShowVideo />} />
         </Routes>
       </div>
     </Provider>

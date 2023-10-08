@@ -18,3 +18,8 @@ export const registerVideo = async (videoName, videoFile) => {
     return error.response.data.message;
   }
 };
+
+export const listVideos = async () => {
+  const response = await axios.get(`${API_BASE}/list-videos`);
+  return response;
+};
