@@ -26,4 +26,4 @@ app.get("/", (req, res) => {
 
 VideoController(app);
 
-app.listen(process.env.PORT || 4000);
+app.listen(process.env.PORT || 4000, process.env.HOST || "127.0.0.1");
