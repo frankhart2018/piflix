@@ -27,19 +27,19 @@ const registerVideoHandler = async (req, res) => {
     const video = await videoDao.checkVideoExistanceByName(videoName);
     if (video == null) {
       videoDao.registerVideo(req.file.path, videoName);
-      res.status(200).send({
-        status: "Video registered successfully",
+      res.status(200).json({
+        message: "Video registered successfully",
       });
     } else {
       unlinkSync(req.file.path);
-      res.status(409).send({
-        status: `Video with name '${videoName}' already registered`,
+      res.status(409).json({
+        message: `Video with name '${videoName}' already registered`,
       });
     }
   } else {
     unlinkSync(req.file.path);
-    res.status(422).send({
-      status: `Invalid extension '${fileExt}'`,
+    res.status(422).json({
+      message: `Invalid extension '${fileExt}'`,
     });
   }
 };
