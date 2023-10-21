@@ -1,0 +1,25 @@
+version: "3"
+services:
+  client:
+    build:
+      context: ./frontend
+    ports:
+      - "3000:3000"
+    environment:
+      - REACT_APP_API_BASE=http://server:4000
+
+  server:
+    build:
+      context: ./backend
+    ports:
+      - "4000:4000"
+    depends_on:
+      - mongodb
+    environment:
+      - HOST=0.0.0.0
+      - DB_CONNECTION_STRING=mongodb://mongodb:27017/piflix
+
+  mongodb:
+    image: mongo
+    ports:
+      - "27017:27017"
