@@ -20,6 +20,6 @@ services:
       - DB_CONNECTION_STRING=mongodb://mongodb:27017/piflix
 
   mongodb:
-    image: mongo
+    image: mongo:bionic
     ports:
       - "27017:27017"
