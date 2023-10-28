@@ -2,6 +2,7 @@ import multer from "multer";
 import { v4 as uuid4 } from "uuid";
 import Path from "path";
 import fs, { unlinkSync } from "fs";
+import { getVideoDurationInSeconds } from "get-video-duration";
 
 import * as videoDao from "./video-dao.js";
 import * as peerDao from "./peer-dao.js";
@@ -49,7 +50,7 @@ const listVideosHandler = async (req, res) => {
   return res.status(200).json(await videoDao.listVideos());
 };
 
-const sendVideo = async (peer, ip, video, res, range) => {
+const sendVideo = async (video, res, range) => {
   const videoPath = video.path;
   const videoSize = fs.statSync(videoPath).size;
 
@@ -60,8 +61,6 @@ const sendVideo = async (peer, ip, video, res, range) => {
     range_split[1] == "" ? start + CHUNK_SIZE : range_split[1],
     videoSize - 1
   );
-
-  await peerDao.updatePeerVideoStats(peer, ip, video.name, start);
 
   // Create headers
   const contentLength = end - start + 1;
@@ -86,7 +85,6 @@ const getVideoHandler = async (req, res) => {
   const { video_id } = req.params;
   const ip = req.ip;
   const range = req.headers.range.replace(/[^\d-]/g, "");
-  console.log(req.headers);
 
   const video = await videoDao.findVideoById(video_id);
   if (video === null) {
@@ -95,8 +93,7 @@ const getVideoHandler = async (req, res) => {
     });
   }
 
-  const peer = await peerDao.findPeerByIp(ip);
-  await sendVideo(peer, ip, video, res, range);
+  await sendVideo(video, res, range);
 };
 
 const getStartLocationHandler = async (req, res) => {
@@ -108,6 +105,20 @@ const getStartLocationHandler = async (req, res) => {
   });
 };
 
+const setCurrentLocationHandler = async (req, res) => {
+  const { video_id } = req.params;
+  const location = req.body.location;
+  const ip = req.ip;
+
+  const video = await videoDao.findVideoById(video_id);
+  const peer = await peerDao.findPeerByIp(ip);
+  await peerDao.updatePeerVideoStats(peer, ip, video.name, location);
+
+  res.status(200).send({
+    status: "ok",
+  });
+};
+
 const VideoController = (app) => {
   app.post(
     "/register-video",
@@ -116,7 +127,8 @@ const VideoController = (app) => {
   );
   app.get("/list-videos", listVideosHandler);
   app.get("/video/:video_id", getVideoHandler);
-  app.get("/video/:video_id/start-location", getStartLocationHandler);
+  app.get("/video/:video_id/location", getStartLocationHandler);
+  app.post("/video/:video_id/location", setCurrentLocationHandler);
 };
 
 export default VideoController;

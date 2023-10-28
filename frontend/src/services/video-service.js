@@ -25,8 +25,13 @@ export const listVideos = async () => {
 };
 
 export const getVideoStartLocation = async (videoId) => {
-  const response = await axios.get(
-    `${API_BASE}/video/${videoId}/start-location`
-  );
+  const response = await axios.get(`${API_BASE}/video/${videoId}/location`);
+  return response;
+};
+
+export const setCurrentVideoLocation = async (videoId, location) => {
+  const response = await axios.post(`${API_BASE}/video/${videoId}/location`, {
+    location,
+  });
   return response;
 };

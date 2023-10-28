@@ -1,6 +1,9 @@
 import React, { useEffect, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { getVideoStartLocationThunk } from "../../services/video-thunk";
+import {
+  getVideoStartLocationThunk,
+  setCurrentVideoLocationThunk,
+} from "../../services/video-thunk";
 
 const ShowVideo = () => {
   const pathName = window.location.pathname;
@@ -19,12 +22,28 @@ const ShowVideo = () => {
         videoId,
       })
     );
+
+    const interval = setInterval(() => {
+      updateLocation();
+    }, 3000);
+
+    return () => clearInterval(interval);
     // eslint-disable-next-line
   }, []);
 
   useEffect(() => {
     videoRef.current.currentTime = startLocation;
   }, [startLocation]);
+
+  const updateLocation = () => {
+    const location = Math.floor(videoRef.current.currentTime);
+    dispatch(
+      setCurrentVideoLocationThunk({
+        videoId,
+        location,
+      })
+    );
+  };
 
   return (
     <div style={{ textAlign: "center" }}>
@@ -35,8 +54,15 @@ const ShowVideo = () => {
         autoPlay
         muted={false}
         ref={videoRef}
+        onPlay={updateLocation}
       >
-        <source src={`${API_BASE}/video/${videoId}`} type="video/mp4" />
+        <source
+          src={`${API_BASE}/video/${videoId}`}
+          type="video/mp4"
+          onChange={(e) => {
+            console.log(e);
+          }}
+        />
       </video>
     </div>
   );

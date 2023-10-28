@@ -28,3 +28,14 @@ export const getVideoStartLocationThunk = createAsyncThunk(
     return response;
   }
 );
+
+export const setCurrentVideoLocationThunk = createAsyncThunk(
+  "video/setCurrentVideoLocation",
+  async (payload) => {
+    const response = await videoService.setCurrentVideoLocation(
+      payload.videoId,
+      payload.location
+    );
+    return response;
+  }
+);

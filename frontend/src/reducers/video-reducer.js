@@ -32,7 +32,6 @@ const videoSlice = createSlice({
       state.startLocation = 0;
     },
     [getVideoStartLocationThunk.fulfilled]: (state, action) => {
-      console.log(action.payload);
       state.startLocation = action.payload.data.startLocation;
     },
     [getVideoStartLocationThunk.rejected]: (state, action) => {
