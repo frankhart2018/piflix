@@ -56,13 +56,7 @@ const ShowVideo = () => {
         ref={videoRef}
         onPlay={updateLocation}
       >
-        <source
-          src={`${API_BASE}/video/${videoId}`}
-          type="video/mp4"
-          onChange={(e) => {
-            console.log(e);
-          }}
-        />
+        <source src={`${API_BASE}/video/${videoId}`} type="video/mp4" />
       </video>
     </div>
   );

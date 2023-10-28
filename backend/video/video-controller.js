@@ -100,8 +100,12 @@ const getStartLocationHandler = async (req, res) => {
   const { video_id } = req.params;
   const ip = req.ip;
 
+  const video = await videoDao.findVideoById(video_id);
+  const peer = await peerDao.findPeerByIp(ip);
+  const location = await peerDao.findVideoIdxInPeer(peer, video.name);
+
   res.status(200).send({
-    startLocation: 15,
+    startLocation: location,
   });
 };
 

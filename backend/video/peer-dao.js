@@ -50,5 +50,9 @@ export const findPeerByIp = (peerIp) => {
 };
 
 export const findVideoIdxInPeer = (peer, videoName) => {
-  let peerIdx = -1;
+  if (peer === null) {
+    return 0;
+  } else {
+    return peer.videos.find((it) => it.name == videoName).location;
+  }
 };
