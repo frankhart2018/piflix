@@ -1,13 +1,18 @@
 import { createSlice } from "@reduxjs/toolkit";
 
-import { registerVideoThunk, listVideosThunk } from "../services/video-thunk";
+import {
+  registerVideoThunk,
+  listVideosThunk,
+  getVideoStartLocationThunk,
+} from "../services/video-thunk";
 
 const initialState = {
   videoList: [],
+  startLocation: 0,
 };
 
 const videoSlice = createSlice({
-  name: "register-video",
+  name: "video",
   initialState,
   reducers: {},
   extraReducers: {
@@ -22,6 +27,16 @@ const videoSlice = createSlice({
     },
     [listVideosThunk.rejected]: (state, action) => {
       state.videoList = [];
+    },
+    [getVideoStartLocationThunk.pending]: (state, action) => {
+      state.startLocation = 0;
+    },
+    [getVideoStartLocationThunk.fulfilled]: (state, action) => {
+      console.log(action.payload);
+      state.startLocation = action.payload.data.startLocation;
+    },
+    [getVideoStartLocationThunk.rejected]: (state, action) => {
+      state.startLocation = 0;
     },
   },
 });

@@ -20,3 +20,11 @@ export const listVideosThunk = createAsyncThunk(
     return response;
   }
 );
+
+export const getVideoStartLocationThunk = createAsyncThunk(
+  "video/getVideoStartLocation",
+  async (payload) => {
+    const response = await videoService.getVideoStartLocation(payload.videoId);
+    return response;
+  }
+);

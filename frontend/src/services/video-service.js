@@ -23,3 +23,10 @@ export const listVideos = async () => {
   const response = await axios.get(`${API_BASE}/list-videos`);
   return response;
 };
+
+export const getVideoStartLocation = async (videoId) => {
+  const response = await axios.get(
+    `${API_BASE}/video/${videoId}/start-location`
+  );
+  return response;
+};

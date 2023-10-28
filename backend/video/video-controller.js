@@ -45,7 +45,7 @@ const registerVideoHandler = async (req, res) => {
   }
 };
 
-const listVideos = async (req, res) => {
+const listVideosHandler = async (req, res) => {
   return res.status(200).json(await videoDao.listVideos());
 };
 
@@ -82,10 +82,11 @@ const sendVideo = async (peer, ip, video, res, range) => {
   videoStream.pipe(res);
 };
 
-const getVideo = async (req, res) => {
+const getVideoHandler = async (req, res) => {
   const { video_id } = req.params;
   const ip = req.ip;
   const range = req.headers.range.replace(/[^\d-]/g, "");
+  console.log(req.headers);
 
   const video = await videoDao.findVideoById(video_id);
   if (video === null) {
@@ -98,16 +99,24 @@ const getVideo = async (req, res) => {
   await sendVideo(peer, ip, video, res, range);
 };
 
+const getStartLocationHandler = async (req, res) => {
+  const { video_id } = req.params;
+  const ip = req.ip;
+
+  res.status(200).send({
+    startLocation: 15,
+  });
+};
+
 const VideoController = (app) => {
   app.post(
     "/register-video",
     upload.single("video-file"),
     registerVideoHandler
   );
-
-  app.get("/list-videos", listVideos);
-
-  app.get("/video/:video_id", getVideo);
+  app.get("/list-videos", listVideosHandler);
+  app.get("/video/:video_id", getVideoHandler);
+  app.get("/video/:video_id/start-location", getStartLocationHandler);
 };
 
 export default VideoController;

@@ -15,9 +15,9 @@ const ListVideo = () => {
   return (
     <div>
       <ul>
-        {videoList.map((videoObj) => {
+        {videoList.map((videoObj, idx) => {
           return (
-            <li>
+            <li key={idx}>
               <Link
                 to={{
                   pathname: `/video/${videoObj._id}`,
