@@ -4,6 +4,7 @@ import Path from "path";
 import fs, { unlinkSync } from "fs";
 
 import * as videoDao from "./video-dao.js";
+import * as peerDao from "./peer-dao.js";
 
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
@@ -48,7 +49,8 @@ const listVideos = async (req, res) => {
   return res.status(200).json(await videoDao.listVideos());
 };
 
-const sendVideo = (res, range, videoPath) => {
+const sendVideo = async (peer, ip, video, res, range) => {
+  const videoPath = video.path;
   const videoSize = fs.statSync(videoPath).size;
 
   const CHUNK_SIZE = 10 ** 6; // 1MB
@@ -58,6 +60,8 @@ const sendVideo = (res, range, videoPath) => {
     range_split[1] == "" ? start + CHUNK_SIZE : range_split[1],
     videoSize - 1
   );
+
+  await peerDao.updatePeerVideoStats(peer, ip, video.name, start);
 
   // Create headers
   const contentLength = end - start + 1;
@@ -80,18 +84,18 @@ const sendVideo = (res, range, videoPath) => {
 
 const getVideo = async (req, res) => {
   const { video_id } = req.params;
+  const ip = req.ip;
   const range = req.headers.range.replace(/[^\d-]/g, "");
 
-  try {
-    const video = await videoDao.findVideoById(video_id);
-    const videoPath = video.path;
-    sendVideo(res, range, videoPath);
-  } catch (_error) {
-    console.log(_error);
-    res.status(404).json({
+  const video = await videoDao.findVideoById(video_id);
+  if (video === null) {
+    return res.status(404).json({
       status: `Video with id '${video_id}' not found`,
     });
   }
+
+  const peer = await peerDao.findPeerByIp(ip);
+  await sendVideo(peer, ip, video, res, range);
 };
 
 const VideoController = (app) => {
