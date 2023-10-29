@@ -4,14 +4,13 @@ import {
   getVideoStartLocationThunk,
   setCurrentVideoLocationThunk,
 } from "../../services/video-thunk";
+import { API_BASE } from "../../utils/constants";
 
 const ShowVideo = () => {
   const pathName = window.location.pathname;
   const videoId = pathName.split("/")[2];
 
   const { startLocation } = useSelector((state) => state.video);
-
-  const API_BASE = process.env.REACT_APP_API_BASE || "http://localhost:4000";
 
   const videoRef = useRef();
   const dispatch = useDispatch();

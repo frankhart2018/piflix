@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const API_BASE = process.env.REACT_APP_API_BASE || "http://localhost:4000";
+import { API_BASE } from "../utils/constants";
 
 export const registerVideo = async (videoName, videoFile) => {
   const formData = new FormData();
